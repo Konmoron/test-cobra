@@ -1,0 +1,77 @@
+#######################################################################################################################
+# nginx的日志格式必须如下：
+# log_format  main  '$remote_addr|$remote_user|[$time_local]|"$request"|'
+#                   '$status|$body_bytes_sent|$http_host|"$http_referer"|'
+#                   '"$http_user_agent"|$http_x_forwarded_for|$upstream_cache_status|'
+#                   '"$upstream_http_content_type"|$request_time|$upstream_response_time|$bytes_sent|$request_length|'
+#                   '"$upstream_addr"|$http_x_traceid|$http_connection|$scheme';
+#######################################################################################################################
+# 报警的标题，如果是：nginx，则报警的标题为：nginx出现异常日志
+default_describe_title: "nginx"
+# 默认label
+default_label: "test_ykj"
+# debug用于调试，如果为true，则仅仅打印报警，不发送报警
+debug: true
+# 日志文件
+#log_files: ["/var/logs/nginx/access.logs"]
+# 默认响应时间
+default_max_response_time: 2
+# 默认监控状态码
+default_monitor_response_status: "50"
+# 默认报警阈值，如果超过default_max_num，则发送报警
+default_max_num: 10
+# 监控日志文件
+log_file_confs:
+  ##########################################################################
+  ##
+  ## 配置示例
+  ##
+  ##########################################################################
+  # 日志文件，数组
+  - log_files: ["/var/logs/nginx/access.logs"]
+    # monitor_urls
+    monitor_urls:
+      # 发送报警时，使用describe_name区别不同类型的URL监控，可以为中文
+      - describe_name: "测试1"
+        # describe_title, 如果不设置，则使用default_describe_title
+        describe_title: "测试nginx"
+        # 一条nginx access log必须包含的字段
+        pre_match_must: ["www.google.com", "/test?params"]
+        # 一条nginx access log不能包含的字段
+        pre_match_must_not: ["www.baidu.com"]
+        # 响应时间监控，如果不配置，则使用default_max_response_time，超过default_max_num，则报警
+        # 如果不需要监控，设置：not_monitor_response_time: true
+        response_time:
+          # 响应时间的阈值，如果没有配置，则使用default_max_response_time
+          - max_response_time: 2
+            # 报警阈值，超过max_num，则报警，如果没有配置，则使用default_max_num
+            max_num: 21
+            # 报警的label，如果label不设置，则使用默认值：test
+            label: "test_ykj"
+        # 监控response_status，如果不配置，则使用default_monitor_response_status，超过default_max_num，则报警
+        # 如果不需要监控，设置：not_monitor_response_status: true
+        response_status:
+          # 需要监控的状态码
+          - status: "50"
+            # 报警阈值，超过max_num，则报警，如果没有配置，则使用default_max_num
+            max_num: 20
+          # 需要监控的状态码
+          - status: "40"
+        # 日志数量监控，如果大于max_num，则发送报警，如果label不设置，则使用默认值：test
+        # 如果不设置，则不发送报警
+        count:
+          - max_num: 2000
+      # 如果都是用默认配置，则只需要以下两个参数
+      - describe_name: "测试2"
+        # 一条nginx access log必须包含的字段
+        pre_match_must: ["/test2?params"]
+      # 如果不需要监控response_status，则添加：not_monitor_response_status: true
+      - describe_name: "测试3"
+        # 一条nginx access log必须包含的字段
+        pre_match_must: ["/test3?params"]
+        # 添加：not_monitor_response_time: true，不健康response_time
+        not_monitor_response_time: true
+        # 添加：not_monitor_response_status: true，不健康response_status
+        not_monitor_response_status: true
+        count:
+          - max_num: 2000

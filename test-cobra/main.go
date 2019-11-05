@@ -15,8 +15,8 @@ limitations under the License.
 */
 package main
 
-import "fmt"
+import "xxxx.com/test-cobra/test-cobra/cmd"
 
 func main() {
-	fmt.Println("hello cobra")
+	cmd.Execute()
 }
