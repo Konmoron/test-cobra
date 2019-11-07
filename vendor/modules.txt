@@ -15,8 +15,6 @@ github.com/hashicorp/hcl/json/token
 github.com/inconshreveable/mousetrap
 # github.com/magiconair/properties v1.8.1
 github.com/magiconair/properties
-# github.com/mitchellh/go-homedir v1.1.0
-github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
 # github.com/pelletier/go-toml v1.6.0
@@ -43,3 +41,5 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/norm
 # gopkg.in/yaml.v2 v2.2.4
 gopkg.in/yaml.v2
+# imer.io/tools v0.0.0 => ../../imer.io/tools
+imer.io/tools/common/utils

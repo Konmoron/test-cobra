@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"yonyou.com/iuap/tools/common/utils"
+	"imer.io/tools/common/utils"
 
 	"github.com/spf13/viper"
 )
