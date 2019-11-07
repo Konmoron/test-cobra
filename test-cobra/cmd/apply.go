@@ -18,33 +18,48 @@ package cmd
 import (
 	"fmt"
 
+	"xxxx.com/test-cobra/test-cobra/lib/apply"
+
 	"github.com/spf13/cobra"
 )
 
-var cfgFileName string
+var (
+	cfgFile string
+	conf    *apply.MonitorUrlConfig
+)
 
-// runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "RUN",
-	Long: `RUN your command here`,
+// applyCmd represents the apply command
+var applyCmd = &cobra.Command{
+	Use:   "apply",
+	Short: "apply config file",
+	Long:  `apply config file`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called")
-		fmt.Println("config file name:", cfgFileName)
+		fmt.Println("apply called")
+		fmt.Println("config file name:", cfgFile)
+		conf = apply.ReadConfig(cfgFile)
+		conf.Print()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(runCmd)
+	rootCmd.AddCommand(applyCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
-	runCmd.PersistentFlags().StringVarP(&cfgFileName, "", "", "", "")
+	// applyCmd.PersistentFlags().String("foo", "", "A help for foo")
+	applyCmd.PersistentFlags().StringVarP(
+		&cfgFile,
+		"filename",
+		"f",
+		"config.yaml",
+		"config file name",
+	)
+
+	//conf = getConfig()
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// applyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

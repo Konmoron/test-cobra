@@ -1,10 +1,9 @@
-package main
+package apply
 
 import (
 	"fmt"
-	"imer.io/tools/common/utils"
-
 	"github.com/spf13/viper"
+	"imer.io/tools/common/utils"
 )
 
 type MonitorResponseTime struct {
@@ -73,45 +72,24 @@ type LogFileConf struct {
 	MonitorUrlS []*MonitorUrl `yaml:"monitor_urls" mapstructure:"monitor_urls"`
 }
 
-// Create private data struct to hold config options.
-type config struct {
-	Hostname string `yaml:"hostname"`
-	Port     string `yaml:"port"`
+func (m *MonitorUrlConfig) Print() {
+	utils.PrintToJson(m)
 }
 
-// Create a new config instance.
-var (
-	conf *MonitorUrlConfig
-)
+func ReadConfig(cfgFile string) *MonitorUrlConfig {
+	viper.SetConfigFile(cfgFile)
 
-// Read the config file from the current directory and marshal
-// into the conf config struct.
-func getConf() *MonitorUrlConfig {
-	viper.AddConfigPath(".")
-	viper.SetConfigName("config")
 	err := viper.ReadInConfig()
-
 	if err != nil {
-		fmt.Printf("%v", err)
+		panic(fmt.Sprintf("read config error, %v", err))
 	}
-	viper.Set("concurrent_read_line_number", 10)
+
 	conf := &MonitorUrlConfig{}
+
 	err = viper.Unmarshal(conf)
 	if err != nil {
-		fmt.Printf("unable to decode into config struct, %v", err)
+		panic(fmt.Sprintf("unable to decode into config struct, %v", err))
 	}
 
 	return conf
-}
-
-// Initialization routine.
-func init() {
-	// Retrieve config options.
-	conf = getConf()
-}
-
-// Main program.
-func main() {
-
-	utils.PrintToJson(conf)
 }
